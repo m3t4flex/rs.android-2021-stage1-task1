@@ -5,84 +5,62 @@ import java.util.*
 class StringParser {
 
     fun getResult(inputString: String): Array<String> {
-        var stringToParse: String = inputString
+        val stringToParse: String = inputString
         var parsingIndex: Int = 0
-        var arrayOfParsedStrings = mutableListOf<String>()
-        var mapOfOccurringIndexes = mutableMapOf<String, Int>()
-        var squareBracketOpen = Stack<Int>()
-        var lessThanBracket = Stack<Int>()
-        var parenthesisOpen = Stack<Int>()
+        val parsedStrings = mutableListOf<String>()
+        val openBracketsIndexes = mutableMapOf<String, Int>()
+        val squareBracketOpen = Stack<Int>()
+        val lessThanBracket = Stack<Int>()
+        val parenthesisOpen = Stack<Int>()
+
         while (parsingIndex < stringToParse.length) {
-            if (stringToParse[parsingIndex] == '[') {
-                squareBracketOpen.push(parsingIndex)
-                parsingIndex += 1
-            } else if (stringToParse[parsingIndex] == '<') {
-                lessThanBracket.push(parsingIndex)
-                parsingIndex += 1
-            } else if (stringToParse[parsingIndex] == '(') {
-                parenthesisOpen.push(parsingIndex)
-                parsingIndex += 1
-            } else if (stringToParse[parsingIndex] == ']') {
-                if (squareBracketOpen.isEmpty()) {
-                    parsingIndex += 1
-                } else {
-                    arrayOfParsedStrings.add(stringToParse.substring(squareBracketOpen.peek() + 1,
-                        parsingIndex))
-                    mapOfOccurringIndexes.put(arrayOfParsedStrings.last(), squareBracketOpen.pop())
-                    parsingIndex += 1
+            when {
+                stringToParse[parsingIndex] == '[' -> {squareBracketOpen.push(parsingIndex); parsingIndex += 1}
+
+                stringToParse[parsingIndex] == '<' -> {lessThanBracket.push(parsingIndex); parsingIndex += 1}
+
+                stringToParse[parsingIndex] == '(' -> {parenthesisOpen.push(parsingIndex); parsingIndex += 1 }
+
+                stringToParse[parsingIndex] == ']' -> {
+                    if (squareBracketOpen.isEmpty()) {
+                        parsingIndex += 1
+                    } else {
+                        parsedStrings.add(stringToParse.substring(squareBracketOpen.peek() + 1, parsingIndex))
+                        openBracketsIndexes.put(parsedStrings.last(), squareBracketOpen.pop())
+                        parsingIndex += 1
+                    }
                 }
-            } else if (stringToParse[parsingIndex] == '>') {
-                if (lessThanBracket.isEmpty()) {
-                    parsingIndex += 1
-                } else {
-                    arrayOfParsedStrings.add(stringToParse.substring(lessThanBracket.peek() + 1,
-                        parsingIndex))
-                    mapOfOccurringIndexes.put(arrayOfParsedStrings.last(), lessThanBracket.pop())
-                    parsingIndex += 1
+
+                stringToParse[parsingIndex] == '>' -> {if (lessThanBracket.isEmpty()) {
+                        parsingIndex += 1
+                    } else {
+                        parsedStrings.add(stringToParse.substring(lessThanBracket.peek() + 1, parsingIndex))
+                        openBracketsIndexes.put(parsedStrings.last(), lessThanBracket.pop())
+                        parsingIndex += 1
+                    }
                 }
-            } else if (stringToParse[parsingIndex] == ')') {
-                if (parenthesisOpen.isEmpty()) {
-                    parsingIndex += 1
-                } else {
-                    arrayOfParsedStrings.add(stringToParse.substring(parenthesisOpen.peek() + 1,
-                        parsingIndex))
-                    mapOfOccurringIndexes.put(arrayOfParsedStrings.last(), parenthesisOpen.pop())
-                    parsingIndex += 1
+
+                stringToParse[parsingIndex] == ')' -> {if (parenthesisOpen.isEmpty()) {
+                        parsingIndex += 1
+                    } else {
+                        parsedStrings.add(stringToParse.substring(parenthesisOpen.peek() + 1,
+                            parsingIndex))
+                        openBracketsIndexes.put(parsedStrings.last(),
+                            parenthesisOpen.pop())
+                        parsingIndex += 1
+                    }
                 }
-            } else {
-                parsingIndex += 1
+                else -> parsingIndex += 1
+            }
+
+        }
+        for (i in 0..parsedStrings.size - 2) {
+            if (openBracketsIndexes.getValue(parsedStrings.get(i)) > openBracketsIndexes.getValue(parsedStrings.get(i + 1))) {
+                parsedStrings[i] = parsedStrings[i + 1].also {parsedStrings[i + 1] = parsedStrings[i]}
             }
         }
-        for (i in 0..arrayOfParsedStrings.size - 2) {
-            if (mapOfOccurringIndexes.getValue(arrayOfParsedStrings.get(i)) > mapOfOccurringIndexes.getValue(arrayOfParsedStrings.get(i + 1))) {
-                arrayOfParsedStrings[i] = arrayOfParsedStrings[i + 1].also {arrayOfParsedStrings[i + 1] = arrayOfParsedStrings[i]}
-            }
-        }
-        val result = arrayOfParsedStrings.toList()
+        val result = parsedStrings.toList()
         return result.toTypedArray()
     }
 }
-
-//        val openBracketsArray: CharArray = charArrayOf('<', '(', '[')
-//        var openBracketIndex: Int = 0
-//        var closeBracketIndex: Int = 0
-//        while (parsingIndex < stringToParse.length - 1)
-//            openBracketIndex = stringToParse.indexOfAny(chars = openBracketsArray, startIndex = parsingIndex)
-//            when {
-//                stringToParse[openBracketIndex] == '<' -> {
-//                    if (stringToParse.indexOf())
-//                }
-//            }
-
-
-
-//            when {
-//                stringToParse.indexOfAny(chars = charArrayOf('<', '(', '['))
-//            }
-//            for (i in stringToParse.indices) {
-//                when {
-//                    stringToParse[i] == '<' || stringToParse[i] == '(' ||
-//                }
-//            }
-
 
