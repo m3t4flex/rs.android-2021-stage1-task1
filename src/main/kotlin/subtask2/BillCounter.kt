@@ -2,17 +2,9 @@ package subtask2
 
 class BillCounter {
 
+    // TODO: Complete the following function
+    // The output could be "Bon Appetit" or the string with number(e.g "10")
     fun calculateFairlySplit(bill: IntArray, k: Int, b: Int): String {
-        var overallCheck: Int = 0
-        for (item in bill) {
-            overallCheck += item
-        }
-        val equalSplit: Int = (overallCheck - bill[k]) / 2
-        return if (equalSplit == b) {
-            "Bon Appetit"
-        } else {
-            (b - equalSplit).toString()
-        }
-
+        throw NotImplementedError("Not implemented")
     }
 }
