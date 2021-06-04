@@ -15,32 +15,42 @@ class StringParser {
 
         while (parsingIndex < stringToParse.length) {
             when {
-                stringToParse[parsingIndex] == '[' -> {squareBracketOpen.push(parsingIndex); parsingIndex += 1}
+                stringToParse[parsingIndex] == '[' -> {
+                    squareBracketOpen.push(parsingIndex); parsingIndex += 1
+                }
 
-                stringToParse[parsingIndex] == '<' -> {lessThanBracket.push(parsingIndex); parsingIndex += 1}
+                stringToParse[parsingIndex] == '<' -> {
+                    lessThanBracket.push(parsingIndex); parsingIndex += 1
+                }
 
-                stringToParse[parsingIndex] == '(' -> {parenthesisOpen.push(parsingIndex); parsingIndex += 1 }
+                stringToParse[parsingIndex] == '(' -> {
+                    parenthesisOpen.push(parsingIndex); parsingIndex += 1
+                }
 
                 stringToParse[parsingIndex] == ']' -> {
                     if (squareBracketOpen.isEmpty()) {
                         parsingIndex += 1
                     } else {
-                        parsedStrings.add(stringToParse.substring(squareBracketOpen.peek() + 1, parsingIndex))
+                        parsedStrings.add(stringToParse.substring(squareBracketOpen.peek() + 1,
+                            parsingIndex))
                         openBracketsIndexes.put(parsedStrings.last(), squareBracketOpen.pop())
                         parsingIndex += 1
                     }
                 }
 
-                stringToParse[parsingIndex] == '>' -> {if (lessThanBracket.isEmpty()) {
+                stringToParse[parsingIndex] == '>' -> {
+                    if (lessThanBracket.isEmpty()) {
                         parsingIndex += 1
                     } else {
-                        parsedStrings.add(stringToParse.substring(lessThanBracket.peek() + 1, parsingIndex))
+                        parsedStrings.add(stringToParse.substring(lessThanBracket.peek() + 1,
+                            parsingIndex))
                         openBracketsIndexes.put(parsedStrings.last(), lessThanBracket.pop())
                         parsingIndex += 1
                     }
                 }
 
-                stringToParse[parsingIndex] == ')' -> {if (parenthesisOpen.isEmpty()) {
+                stringToParse[parsingIndex] == ')' -> {
+                    if (parenthesisOpen.isEmpty()) {
                         parsingIndex += 1
                     } else {
                         parsedStrings.add(stringToParse.substring(parenthesisOpen.peek() + 1,
@@ -52,15 +62,18 @@ class StringParser {
                 }
                 else -> parsingIndex += 1
             }
-
         }
+        
         for (i in 0..parsedStrings.size - 2) {
-            if (openBracketsIndexes.getValue(parsedStrings.get(i)) > openBracketsIndexes.getValue(parsedStrings.get(i + 1))) {
-                parsedStrings[i] = parsedStrings[i + 1].also {parsedStrings[i + 1] = parsedStrings[i]}
+            if (openBracketsIndexes.getValue(parsedStrings.get(i)) > openBracketsIndexes.getValue(
+                    parsedStrings.get(i + 1))
+            ) {
+                parsedStrings[i] =
+                    parsedStrings[i + 1].also { parsedStrings[i + 1] = parsedStrings[i] }
             }
         }
-        val result = parsedStrings.toList()
-        return result.toTypedArray()
+
+        return parsedStrings.toTypedArray()
     }
 }
 
